@@ -1,6 +1,6 @@
 import AdminLayout from "@/components/admin-layout.tsx";
 import UserLayout from "@/components/user-layout.tsx";
-import { navItems } from "@/lib/nav.ts";
+import { firstPathname, navItems } from "@/lib/nav.ts";
 import { pb } from "@/lib/pocketbase";
 import Login from "@/pages/login.tsx";
 import NotFound from "@/pages/not-found.tsx";
@@ -19,7 +19,7 @@ function App() {
     );
   }
 
-  const pathname = window.location.pathname;
+  const pathname = firstPathname();
 
   const Component =
     navItems.find((item) => item.pathname === pathname)?.component || NotFound;

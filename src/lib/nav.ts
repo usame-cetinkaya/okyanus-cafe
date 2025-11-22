@@ -35,3 +35,6 @@ export const navItems = [
     component: Sessions,
   },
 ];
+
+export const firstPathname = () =>
+  "/" + window.location.pathname.split("/").at(1);
