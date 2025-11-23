@@ -61,16 +61,20 @@ function UserDetail({ id }: UserDetailProps) {
 
 function UserCard({ user }: { user: User }) {
   function handleResetPassword() {
-    if (
-      confirm("Kullanıcının şifresini sıfırlamak istediğinize emin misiniz?")
-    ) {
+    const password = prompt(
+      "Veli için yeni şifre girin: (En az 8 karakter olmalıdır)",
+    );
+    if (password) {
       pb.collection("users")
         .update<User>(user.id, {
-          password: "okyanus1",
-          passwordConfirm: "okyanus1",
+          password,
+          passwordConfirm: password,
         })
         .then(() => {
           alert("Şifre başarıyla sıfırlandı.");
+        })
+        .catch((error) => {
+          alert(`Bir hata oluştu:\n${JSON.stringify(error.response, null, 2)}`);
         });
     }
   }

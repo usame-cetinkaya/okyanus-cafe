@@ -29,6 +29,11 @@ function Users() {
     const name = prompt("Veli adını girin:");
     if (!name) return;
 
+    const password = prompt(
+      "Veli için şifre girin: (En az 8 karakter olmalıdır)",
+    );
+    if (!password) return;
+
     const username = nameToUsername(name);
     const email = `${username}@okyanus.cafe`;
 
@@ -36,14 +41,17 @@ function Users() {
       .create<User>({
         name,
         email,
-        password: "okyanus1",
-        passwordConfirm: "okyanus1",
+        password,
+        passwordConfirm: password,
       })
       .then((newUser: User) => {
         alert(
           `Veli başarıyla oluşturuldu.\nKullanıcı Adı: ${username}\nŞifre: okyanus1`,
         );
         window.location.href = `/veliler/${newUser.id}`;
+      })
+      .catch((error) => {
+        alert(`Bir hata oluştu:\n${JSON.stringify(error.response, null, 2)}`);
       });
   };
 
