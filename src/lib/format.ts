@@ -22,12 +22,11 @@ export const toDatetimeLocal = (dateString: string) => {
   return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
 };
 
-export function hoursToHMS(hours: number) {
-  const totalSeconds = Math.round(hours * 3600);
+export function hoursToHM(hours: number) {
+  const totalMinutes = Math.round(hours * 60);
 
-  const hh = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
-  const mm = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
-  const ss = String(totalSeconds % 60).padStart(2, "0");
+  const hh = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
+  const mm = String(totalMinutes % 60).padStart(2, "0");
 
-  return `${hh}:${mm}:${ss}`;
+  return `${hh}:${mm}`;
 }

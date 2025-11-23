@@ -1,6 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { User } from "@/lib/models.ts";
-import { formatDate, formatUsername, hoursToHMS } from "@/lib/format.ts";
+import { formatDate, formatUsername, hoursToHM } from "@/lib/format.ts";
 import { sortableHeader } from "@/lib/table.tsx";
 
 export const columns: ColumnDef<User>[] = [
@@ -34,17 +34,12 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ getValue }) => getValue() as number,
   },
   {
-    accessorKey: "usage",
-    header: ({ column }) => sortableHeader(column, "Paket Kullanımı"),
-    cell: ({ getValue }) => hoursToHMS(getValue() as number),
-  },
-  {
     id: "remaining",
     header: ({ column }) => sortableHeader(column, "Paket Kalan"),
     cell: ({ row }) => {
-      const packHours = row.getValue("pack_hours") as number;
-      const usage = row.getValue("usage") as number;
-      return hoursToHMS(packHours - usage);
+      const packHours = row.original.pack_hours;
+      const usage = row.original.usage || 0;
+      return hoursToHM(packHours - usage);
     },
   },
   {
