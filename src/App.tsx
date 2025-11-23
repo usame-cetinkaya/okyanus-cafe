@@ -5,6 +5,7 @@ import { pb } from "@/lib/pocketbase";
 import Login from "@/pages/login.tsx";
 import NotFound from "@/pages/not-found.tsx";
 import UserDashboard from "@/pages/user-dashboard.tsx";
+import ChangePassword from "@/pages/change-password.tsx";
 
 function App() {
   if (!pb.authStore.isValid) {
@@ -12,6 +13,14 @@ function App() {
   }
 
   if (!pb.authStore.isSuperuser) {
+    if (pb.authStore.record?.must_change_password) {
+      return (
+        <UserLayout>
+          <ChangePassword />
+        </UserLayout>
+      );
+    }
+
     return (
       <UserLayout>
         <UserDashboard />

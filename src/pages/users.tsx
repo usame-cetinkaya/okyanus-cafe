@@ -29,13 +29,9 @@ function Users() {
     const name = prompt("Veli adını girin:");
     if (!name) return;
 
-    const password = prompt(
-      "Veli için şifre girin: (En az 8 karakter olmalıdır)",
-    );
-    if (!password) return;
-
     const username = nameToUsername(name);
     const email = `${username}@okyanus.cafe`;
+    const password = import.meta.env.VITE_DEFAULT_PASSWORD;
 
     pb.collection("users")
       .create<User>({
@@ -43,10 +39,11 @@ function Users() {
         email,
         password,
         passwordConfirm: password,
+        must_change_password: true,
       })
       .then((newUser: User) => {
         alert(
-          `Veli başarıyla oluşturuldu.\nKullanıcı Adı: ${username}\nŞifre: okyanus1`,
+          `Veli başarıyla oluşturuldu.\n\nKullanıcı Adı: ${username}\nŞifre: ${password}\n\nVeli ilk girişte bu şifreyi değiştirmelidir.`,
         );
         window.location.href = `/veliler/${newUser.id}`;
       })

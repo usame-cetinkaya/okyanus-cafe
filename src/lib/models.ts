@@ -2,6 +2,7 @@ export type User = {
   id: string;
   email: string;
   name: number;
+  must_change_password: boolean;
   pack_start: string;
   pack_end: string;
   pack_hours: number;

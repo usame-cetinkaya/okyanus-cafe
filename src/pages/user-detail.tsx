@@ -69,17 +69,19 @@ function UserDetail({ id }: UserDetailProps) {
 
 function UserCard({ user }: { user: User }) {
   function handleResetPassword() {
-    const password = prompt(
-      "Veli için yeni şifre girin: (En az 8 karakter olmalıdır)",
-    );
-    if (password) {
+    const password = import.meta.env.VITE_DEFAULT_PASSWORD;
+
+    if (confirm(`Şifreyi sıfırlamak istediğinize emin misiniz?`)) {
       pb.collection("users")
         .update<User>(user.id, {
           password,
           passwordConfirm: password,
+          must_change_password: true,
         })
         .then(() => {
-          alert("Şifre başarıyla sıfırlandı.");
+          alert(
+            `Şifre başarıyla sıfırlandı.\n\nYeni şifre: ${password}\n\nVeli ilk girişte bu şifreyi değiştirmelidir.`,
+          );
         })
         .catch((error) => {
           alert(`Bir hata oluştu:\n${JSON.stringify(error.response, null, 2)}`);
