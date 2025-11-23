@@ -1,6 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Session } from "@/lib/models.ts";
-import { formatDate } from "@/lib/format.ts";
+import { formatDate, hoursToHM } from "@/lib/format.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { pb } from "@/lib/pocketbase.ts";
 import {
@@ -78,6 +78,22 @@ export const columns: ColumnDef<Session>[] = [
       ) : (
         "—"
       ),
+  },
+  {
+    id: "usage",
+    header: "Süre",
+    cell: ({ row }) => {
+      const { start, end } = row.original;
+      const startDate = new Date(start);
+      const endDate = end ? new Date(end) : new Date();
+      const startTime = startDate.getTime();
+      const endTime = endDate.getTime();
+      const timeDiff = endTime - startTime;
+
+      const diffInHours = timeDiff / (1000 * 60 * 60);
+
+      return hoursToHM(diffInHours);
+    },
   },
   {
     id: "actions",

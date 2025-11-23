@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { pb } from "@/lib/pocketbase.ts";
-import type { Kid, User } from "@/lib/models.ts";
-import { formatUsername, toDatetimeLocal } from "@/lib/format.ts";
+import type { Kid, Session, User } from "@/lib/models.ts";
+import { formatUsername, hoursToHM, toDatetimeLocal } from "@/lib/format.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
+import { DataTable } from "@/tables/users/data-table.tsx";
+import { columns } from "@/tables/sessions/columns.tsx";
 
 interface UserDetailProps {
   id: string;
@@ -22,9 +24,10 @@ interface UserDetailProps {
 function UserDetail({ id }: UserDetailProps) {
   const [user, setUser] = useState<User>();
   const [kids, setKids] = useState<Kid[]>([]);
+  const [sessions, setSessions] = useState<Session[]>([]);
 
   useEffect(() => {
-    pb.collection("users")
+    pb.collection("usage")
       .getOne<User>(id)
       .then((user) => {
         setUser(user);
@@ -35,12 +38,23 @@ function UserDetail({ id }: UserDetailProps) {
       .then((kids: Kid[]) => {
         setKids(kids);
       });
+
+    pb.collection("sessions")
+      .getFullList<Session>({
+        filter: `kid.parent="${id}"`,
+        sort: "-start",
+        expand: "kid",
+      })
+      .then((sessions: Session[]) => {
+        setSessions(sessions);
+      });
   }, [id]);
 
   return (
     <div className="flex flex-col gap-6 md:flex-row">
       {user && <UserCard user={user} />}
       {user && kids && <KidsCard user={user} kids={kids} />}
+      {sessions && <DataTable columns={columns} data={sessions} />}
     </div>
   );
 }
@@ -114,16 +128,6 @@ function UserCard({ user }: { user: User }) {
         <form id="pack-form" onSubmit={handleUpdatePack}>
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
-              <Label htmlFor="pack-hours">Paket Saat</Label>
-              <Input
-                id="pack-hours"
-                name="pack_hours"
-                type="number"
-                required
-                defaultValue={user.pack_hours}
-              />
-            </div>
-            <div className="grid gap-2">
               <Label htmlFor="pack-start">Paket Başlangıç</Label>
               <Input
                 id="pack-start"
@@ -140,6 +144,22 @@ function UserCard({ user }: { user: User }) {
                 type="datetime-local"
                 defaultValue={toDatetimeLocal(user.pack_end)}
               />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="pack-hours">Paket Saat</Label>
+              <Input
+                id="pack-hours"
+                name="pack_hours"
+                type="number"
+                required
+                defaultValue={user.pack_hours}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="pack-remaining">Paket Kalan</Label>
+              <span id="pack-remaining">
+                {hoursToHM(user.pack_hours - (user?.usage || 0))}
+              </span>
             </div>
           </div>
         </form>
