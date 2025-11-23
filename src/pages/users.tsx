@@ -16,7 +16,7 @@ function Users() {
   const [data, setData] = useState<User[]>([]);
 
   useEffect(() => {
-    pb.collection("users")
+    pb.collection("usage")
       .getFullList<User>()
       .then((users: User[]) => {
         setData(users);
