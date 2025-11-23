@@ -21,7 +21,11 @@ function KidDetail({ id }: UserDetailProps) {
       });
 
     pb.collection("sessions")
-      .getFullList<Session>({ filter: `kid="${id}"`, expand: "kid" })
+      .getFullList<Session>({
+        filter: `kid="${id}"`,
+        expand: "kid",
+        sort: "-start",
+      })
       .then((sessions: Session[]) => {
         setSessions(sessions);
       });

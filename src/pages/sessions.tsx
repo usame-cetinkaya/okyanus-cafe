@@ -9,7 +9,7 @@ function Sessions() {
 
   useEffect(() => {
     pb.collection("sessions")
-      .getFullList<Session>({ expand: "kid" })
+      .getFullList<Session>({ expand: "kid", sort: "-start" })
       .then((users) => {
         setData(users);
       });
