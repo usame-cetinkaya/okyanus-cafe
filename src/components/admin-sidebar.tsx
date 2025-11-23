@@ -25,23 +25,25 @@ export function AdminSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.pathname}
-                    className="mt-3 p-6 text-xl [&>svg]:size-auto"
-                  >
-                    <a
-                      href={item.pathname}
-                      onClick={() => isMobile && toggleSidebar()}
+              {navItems
+                .filter((item) => !item.hideInMenu)
+                .map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === item.pathname}
+                      className="mt-3 p-6 text-xl [&>svg]:size-auto"
                     >
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+                      <a
+                        href={item.pathname}
+                        onClick={() => isMobile && toggleSidebar()}
+                      >
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

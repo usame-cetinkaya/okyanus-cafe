@@ -2,15 +2,20 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input.tsx";
 import { pb } from "@/lib/pocketbase";
+import * as React from "react";
 
 function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const isAdminLogin = window.location.pathname === "/yonetim";
 
-  const handleLogin = async () => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
+
     try {
       setLoading(true);
       await pb
@@ -31,23 +36,20 @@ function Login() {
           Okyanus Cafe{isAdminLogin ? " Yönetim" : ""}
         </h1>
       </header>
-      <div className="w-full max-w-sm mx-auto p-4 flex flex-col gap-6">
-        <Input
-          type="text"
-          placeholder="Kullanıcı Adı"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <Input
-          type="password"
-          placeholder="Şifre"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button onClick={handleLogin} disabled={loading}>
-          Giriş Yap
-        </Button>
-      </div>
+      <form onSubmit={handleLogin}>
+        <div className="w-full max-w-sm mx-auto p-4 flex flex-col gap-6">
+          <Input
+            type="text"
+            name="username"
+            placeholder="Kullanıcı Adı"
+            required
+          />
+          <Input type="password" name="password" placeholder="Şifre" required />
+          <Button type="submit" disabled={loading}>
+            Giriş Yap
+          </Button>
+        </div>
+      </form>
     </>
   );
 }

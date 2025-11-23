@@ -230,6 +230,7 @@ function KidsCard({ user, kids }: { user: User; kids: Kid[] }) {
         columns={kidColumns}
         data={kids}
         hiddenColumns={["parentName"]}
+        filterEnabled={false}
       />
     </div>
   );

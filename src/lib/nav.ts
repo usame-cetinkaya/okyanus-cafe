@@ -27,6 +27,7 @@ export const navItems = [
     pathname: "/cocuklar",
     icon: FlowerIcon,
     component: Kids,
+    hideInMenu: true,
   },
   {
     title: "Giriş Çıkışlar",

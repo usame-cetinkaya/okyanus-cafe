@@ -29,7 +29,11 @@ function AdminDashboard() {
 
   return (
     <div className="flex flex-col gap-6">
-      <DataTable columns={sessionColumns} data={sessions} />
+      <DataTable
+        columns={sessionColumns}
+        data={sessions}
+        filterEnabled={false}
+      />
       <h2 className="text-xl">Çocuklar</h2>
       <DataTable columns={kidsColumns} data={kids} />
     </div>

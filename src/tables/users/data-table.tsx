@@ -24,12 +24,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   hiddenColumns?: string[];
+  filterEnabled?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   hiddenColumns = [],
+  filterEnabled = true,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -63,17 +65,21 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center mb-4">
-        <Input
-          type="search"
-          placeholder="Filtrele..."
-          value={(table.getColumn("filter")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("filter")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-      </div>
+      {filterEnabled && (
+        <div className="flex items-center mb-4">
+          <Input
+            type="search"
+            placeholder="Filtrele..."
+            value={
+              (table.getColumn("filter")?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table.getColumn("filter")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+        </div>
+      )}
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
