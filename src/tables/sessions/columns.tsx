@@ -10,6 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
+import SessionForm from "@/dialogs/session-form.tsx";
+import { useState } from "react";
 
 function handleEndSession(session: Session) {
   return async () => {
@@ -77,24 +79,40 @@ export const columns: ColumnDef<Session>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) =>
-      pb.authStore.isSuperuser ? (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">İşlemler</Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Düzenle</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleDeleteSession(row.original)}>
-              Sil
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ) : null,
+    cell: ({ row }) => {
+      return pb.authStore.isSuperuser ? (
+        <SessionActions session={row.original} />
+      ) : null;
+    },
   },
   {
     id: "filter",
     accessorFn: (row) => `${row.expand.kid.name}`,
   },
 ];
+
+// eslint-disable-next-line react-refresh/only-export-components
+function SessionActions({ session }: { session: Session }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">İşlemler</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => setOpen(true)}>
+            Düzenle
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => handleDeleteSession(session)}>
+            Sil
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <SessionForm session={session} open={open} onOpenChange={setOpen} />
+    </>
+  );
+}
