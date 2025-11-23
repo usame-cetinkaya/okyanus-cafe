@@ -46,6 +46,21 @@ function UserDetail({ id }: UserDetailProps) {
 }
 
 function UserCard({ user }: { user: User }) {
+  function handleResetPassword() {
+    if (
+      confirm("Kullanıcının şifresini sıfırlamak istediğinize emin misiniz?")
+    ) {
+      pb.collection("users")
+        .update<User>(user.id, {
+          password: "okyanus1",
+          passwordConfirm: "okyanus1",
+        })
+        .then(() => {
+          alert("Şifre başarıyla sıfırlandı.");
+        });
+    }
+  }
+
   function handleDeletePack() {
     if (confirm("Paketi silmek istediğinize emin misiniz?")) {
       pb.collection("users")
@@ -90,8 +105,8 @@ function UserCard({ user }: { user: User }) {
         <CardTitle>{user.name}</CardTitle>
         <CardDescription>{formatUsername(user.email)}</CardDescription>
         <CardAction>
-          <Button variant="outline" onClick={handleDeletePack}>
-            Paketi Sil
+          <Button variant="outline" onClick={handleResetPassword}>
+            Şifreyi Sıfırla
           </Button>
         </CardAction>
       </CardHeader>
@@ -129,9 +144,16 @@ function UserCard({ user }: { user: User }) {
           </div>
         </form>
       </CardContent>
-      <CardFooter>
-        <Button type="submit" className="w-full" form="pack-form">
-          Güncelle
+      <CardFooter className="flex flex-col gap-2 md:flex-row md:justify-end">
+        <Button type="submit" form="pack-form" className="w-full md:w-auto">
+          Paketi Güncelle
+        </Button>
+        <Button
+          variant="outline"
+          onClick={handleDeletePack}
+          className="w-full md:w-auto"
+        >
+          Paketi Sil
         </Button>
       </CardFooter>
     </Card>

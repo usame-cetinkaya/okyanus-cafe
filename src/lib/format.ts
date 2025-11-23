@@ -30,3 +30,32 @@ export function hoursToHM(hours: number) {
 
   return `${hh}:${mm}`;
 }
+
+export function nameToUsername(name: string) {
+  const map = {
+    ı: "i",
+    İ: "i",
+    ç: "c",
+    Ç: "c",
+    ğ: "g",
+    Ğ: "g",
+    ö: "o",
+    Ö: "o",
+    ş: "s",
+    Ş: "s",
+    ü: "u",
+    Ü: "u",
+  };
+
+  return (
+    name
+      .trim()
+      .toLowerCase()
+      .split("")
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      .map((ch) => map[ch] || ch)
+      .join("")
+      .replace(/\s+/g, ".")
+  );
+}
