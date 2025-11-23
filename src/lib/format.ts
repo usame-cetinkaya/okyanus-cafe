@@ -1,3 +1,5 @@
+import type { User } from "@/lib/models.ts";
+
 export const formatUsername = (email: string) => email.split("@").at(0);
 
 export const formatDate = (dateString: string | null) => {
@@ -23,12 +25,28 @@ export const toDatetimeLocal = (dateString: string) => {
 };
 
 export function hoursToHM(hours: number) {
+  if (!hours) hours = 0;
+
   const totalMinutes = Math.round(hours * 60);
 
   const hh = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
   const mm = String(totalMinutes % 60).padStart(2, "0");
 
   return `${hh}:${mm}`;
+}
+
+export const getRemainingHours = (user: User) => {
+  const packHours = user.pack_hours;
+  const usage = user.usage || 0;
+  return Math.max(0, packHours - usage);
+};
+
+export function getExcessHours(user: User) {
+  const packHours = user.pack_hours;
+  const usage = user.usage || 0;
+  const extra = Math.max(0, usage - packHours);
+  const excess = user.excess || 0;
+  return excess + extra;
 }
 
 export function nameToUsername(name: string) {

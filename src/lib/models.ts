@@ -6,6 +6,7 @@ export type User = {
   pack_end: string;
   pack_hours: number;
   usage?: number;
+  excess?: number;
 };
 
 export type Kid = {

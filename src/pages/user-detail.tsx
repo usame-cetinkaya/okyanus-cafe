@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { pb } from "@/lib/pocketbase.ts";
 import type { Kid, Session, User } from "@/lib/models.ts";
-import { formatUsername, hoursToHM, toDatetimeLocal } from "@/lib/format.ts";
+import {
+  formatUsername,
+  getExcessHours,
+  getRemainingHours,
+  hoursToHM,
+  toDatetimeLocal,
+} from "@/lib/format.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
@@ -16,6 +22,7 @@ import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { DataTable } from "@/tables/users/data-table.tsx";
 import { columns } from "@/tables/sessions/columns.tsx";
+import { clsx } from "clsx";
 
 interface UserDetailProps {
   id: string;
@@ -162,7 +169,18 @@ function UserCard({ user }: { user: User }) {
             <div className="grid gap-2">
               <Label htmlFor="pack-remaining">Paket Kalan</Label>
               <span id="pack-remaining">
-                {hoursToHM(user.pack_hours - (user?.usage || 0))}
+                {hoursToHM(getRemainingHours(user))}
+              </span>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="pack-remaining">Paket Aşım</Label>
+              <span
+                id="pack-remaining"
+                className={clsx(
+                  getExcessHours(user) > 0 ? "text-red-600 font-bold" : "",
+                )}
+              >
+                {hoursToHM(getExcessHours(user))}
               </span>
             </div>
           </div>

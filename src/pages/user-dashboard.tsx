@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { pb } from "@/lib/pocketbase.ts";
 import type { Kid, Session, User } from "@/lib/models.ts";
-import { formatDate, formatUsername, hoursToHM } from "@/lib/format.ts";
+import {
+  formatDate,
+  formatUsername,
+  getExcessHours,
+  getRemainingHours,
+  hoursToHM,
+} from "@/lib/format.ts";
 import {
   Card,
   CardContent,
@@ -12,6 +18,7 @@ import {
 import { Label } from "@/components/ui/label.tsx";
 import { DataTable } from "@/tables/users/data-table.tsx";
 import { columns } from "@/tables/sessions/columns.tsx";
+import { clsx } from "clsx";
 
 function UserDashboard() {
   const id = pb.authStore?.record?.id as string;
@@ -69,7 +76,16 @@ function UserCard({ user }: { user: User }) {
           </div>
           <div className="grid gap-2">
             <Label htmlFor="pack-end">Paket Bitiş</Label>
-            <span id="pack-end">{formatDate(user.pack_end)}</span>
+            <span
+              id="pack-end"
+              className={clsx(
+                new Date(user.pack_end) < new Date()
+                  ? "text-red-600 font-bold"
+                  : "",
+              )}
+            >
+              {formatDate(user.pack_end)}
+            </span>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="pack-hours">Paket Saat</Label>
@@ -78,7 +94,18 @@ function UserCard({ user }: { user: User }) {
           <div className="grid gap-2">
             <Label htmlFor="pack-remaining">Paket Kalan</Label>
             <span id="pack-remaining">
-              {hoursToHM(user.pack_hours - (user?.usage || 0))}
+              {hoursToHM(getRemainingHours(user))}
+            </span>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="pack-remaining">Paket Aşım</Label>
+            <span
+              id="pack-remaining"
+              className={clsx(
+                getExcessHours(user) > 0 ? "text-red-600 font-bold" : "",
+              )}
+            >
+              {hoursToHM(getExcessHours(user))}
             </span>
           </div>
         </div>

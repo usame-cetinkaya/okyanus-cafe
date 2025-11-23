@@ -1,7 +1,14 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { User } from "@/lib/models.ts";
-import { formatDate, formatUsername, hoursToHM } from "@/lib/format.ts";
+import {
+  formatDate,
+  formatUsername,
+  getExcessHours,
+  getRemainingHours,
+  hoursToHM,
+} from "@/lib/format.ts";
 import { sortableHeader } from "@/lib/table.tsx";
+import { clsx } from "clsx";
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -26,7 +33,16 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "pack_end",
     header: ({ column }) => sortableHeader(column, "Paket Bitiş"),
-    cell: ({ getValue }) => formatDate(getValue() as string),
+    cell: ({ getValue }) => {
+      const packEnd = getValue() as string;
+      const now = new Date();
+      const endDate = new Date(packEnd);
+      return (
+        <span className={clsx(endDate < now ? "text-red-600 font-bold" : "")}>
+          {formatDate(packEnd)}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "pack_hours",
@@ -37,9 +53,20 @@ export const columns: ColumnDef<User>[] = [
     id: "remaining",
     header: ({ column }) => sortableHeader(column, "Paket Kalan"),
     cell: ({ row }) => {
-      const packHours = row.original.pack_hours;
-      const usage = row.original.usage || 0;
-      return hoursToHM(packHours - usage);
+      const remaining = getRemainingHours(row.original);
+      return hoursToHM(remaining);
+    },
+  },
+  {
+    accessorKey: "excess",
+    header: ({ column }) => sortableHeader(column, "Paket Aşım"),
+    cell: ({ row }) => {
+      const excess = getExcessHours(row.original);
+      return (
+        <span className={clsx(excess > 0 ? "text-red-600 font-bold" : "")}>
+          {hoursToHM(excess)}
+        </span>
+      );
     },
   },
   {

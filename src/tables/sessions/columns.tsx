@@ -29,7 +29,7 @@ function handleEndSession(session: Session) {
 
     alert(`${session.expand.kid.name} için oturum sonlandırıldı.`);
 
-    window.location.reload();
+    window.location.href = `/veliler/${session.expand.kid.parent}`;
   };
 }
 

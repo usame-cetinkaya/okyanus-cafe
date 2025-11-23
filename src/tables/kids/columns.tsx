@@ -20,6 +20,8 @@ async function handleStartSession(kid: Kid) {
   });
 
   alert(`${kid.name} için giriş başlatıldı.`);
+
+  window.location.reload();
 }
 
 export const columns: ColumnDef<Kid>[] = [
