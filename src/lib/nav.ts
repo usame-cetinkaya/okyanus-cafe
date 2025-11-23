@@ -17,8 +17,8 @@ export const navItems = [
     component: AdminDashboard,
   },
   {
-    title: "Kullanıcılar",
-    pathname: "/kullanicilar",
+    title: "Veliler",
+    pathname: "/veliler",
     icon: UsersIcon,
     component: Users,
   },
@@ -36,5 +36,8 @@ export const navItems = [
   },
 ];
 
-export const firstPathname = () =>
-  "/" + window.location.pathname.split("/").at(1);
+export const pathnameSegments = () => window.location.pathname.split("/");
+
+export const route = () => `/${pathnameSegments().at(1)}`;
+
+export const routeId = () => pathnameSegments().at(2);

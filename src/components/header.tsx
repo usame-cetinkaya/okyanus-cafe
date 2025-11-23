@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useSidebar } from "@/components/ui/sidebar";
 import { CircleUser, Menu } from "lucide-react";
-import { firstPathname, navItems } from "@/lib/nav.ts";
+import { route, navItems } from "@/lib/nav.ts";
 
 export default function Header() {
   const { toggleSidebar } = useSidebar();
@@ -18,7 +18,7 @@ export default function Header() {
   const isSuperuser = pb.authStore.isSuperuser;
 
   const title = isSuperuser
-    ? navItems.find((item) => item.pathname === firstPathname())?.title
+    ? navItems.find((item) => item.pathname === route())?.title
     : "Okyanus Cafe";
 
   const handleLogout = () => {

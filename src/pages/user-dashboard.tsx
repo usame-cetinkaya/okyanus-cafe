@@ -1,5 +1,5 @@
 function UserDashboard() {
-  return <h1>Kullanıcı Paneli</h1>;
+  return <h1>Veli Paneli</h1>;
 }
 
 export default UserDashboard;

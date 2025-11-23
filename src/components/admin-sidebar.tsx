@@ -9,12 +9,12 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { firstPathname, navItems } from "@/lib/nav.ts";
+import { route, navItems } from "@/lib/nav.ts";
 
 export function AdminSidebar() {
   const { isMobile, toggleSidebar } = useSidebar();
 
-  const pathname = firstPathname();
+  const pathname = route();
 
   return (
     <Sidebar>

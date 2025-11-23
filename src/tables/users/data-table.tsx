@@ -46,18 +46,21 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
       columnFilters,
+      columnVisibility: {
+        filter: false,
+      },
     },
   });
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center mb-4">
         <Input
           type="search"
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filtrele..."
+          value={(table.getColumn("filter")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("filter")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -105,7 +108,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Sonuç bulunamadı.
                 </TableCell>
               </TableRow>
             )}
