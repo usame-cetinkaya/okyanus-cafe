@@ -54,11 +54,17 @@ export const columns: ColumnDef<Session>[] = [
   {
     accessorKey: "expand.kid.name",
     header: "Ad Soyad",
-    cell: ({ row, getValue }) => (
-      <a href={`/cocuklar/${row.original.expand.kid.id}`} className="underline">
-        {getValue() as string}
-      </a>
-    ),
+    cell: ({ row, getValue }) =>
+      pb.authStore.isSuperuser ? (
+        <a
+          href={`/cocuklar/${row.original.expand.kid.id}`}
+          className="underline"
+        >
+          {getValue() as string}
+        </a>
+      ) : (
+        (getValue() as string)
+      ),
   },
   {
     accessorKey: "start",

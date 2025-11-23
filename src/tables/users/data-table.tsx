@@ -23,11 +23,13 @@ import { Input } from "@/components/ui/input.tsx";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  hiddenColumns?: string[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  hiddenColumns = [],
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -48,6 +50,13 @@ export function DataTable<TData, TValue>({
       columnFilters,
       columnVisibility: {
         filter: false,
+        ...hiddenColumns.reduce(
+          (acc, column) => {
+            acc[column] = false;
+            return acc;
+          },
+          {} as Record<string, boolean>,
+        ),
       },
     },
   });

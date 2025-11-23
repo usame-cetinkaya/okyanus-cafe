@@ -5,7 +5,13 @@ export const formatUsername = (email: string) => email.split("@").at(0);
 export const formatDate = (dateString: string | null) => {
   if (!dateString) return "—";
   const date = new Date(dateString);
-  return date.toLocaleString("tr-TR");
+  return date.toLocaleString("tr-TR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 };
 
 export const toDatetimeLocal = (dateString: string) => {

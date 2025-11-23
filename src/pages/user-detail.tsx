@@ -21,7 +21,8 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { DataTable } from "@/tables/users/data-table.tsx";
-import { columns } from "@/tables/sessions/columns.tsx";
+import { columns as sessionColumns } from "@/tables/sessions/columns.tsx";
+import { columns as kidColumns } from "@/tables/kids/columns.tsx";
 import { clsx } from "clsx";
 
 interface UserDetailProps {
@@ -41,7 +42,7 @@ function UserDetail({ id }: UserDetailProps) {
       });
 
     pb.collection("kids")
-      .getFullList<Kid>({ filter: `parent="${id}"` })
+      .getFullList<Kid>({ filter: `parent="${id}"`, expand: "parent" })
       .then((kids: Kid[]) => {
         setKids(kids);
       });
@@ -61,7 +62,7 @@ function UserDetail({ id }: UserDetailProps) {
     <div className="flex flex-col gap-6 md:flex-row">
       {user && <UserCard user={user} />}
       {user && kids && <KidsCard user={user} kids={kids} />}
-      {sessions && <DataTable columns={columns} data={sessions} />}
+      {sessions && <SessionsCard sessions={sessions} />}
     </div>
   );
 }
@@ -218,23 +219,28 @@ function KidsCard({ user, kids }: { user: User; kids: Kid[] }) {
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Çocuklar</CardTitle>
-        <CardAction>
-          <Button variant="outline" onClick={handleAddChild}>
-            Çocuk Ekle
-          </Button>
-        </CardAction>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-col gap-1">
-          {kids.map((kid) => (
-            <span key={kid.id}>{kid.name}</span>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-xl font-bold">Çocuklar</h2>
+        <Button variant="outline" onClick={handleAddChild}>
+          Çocuk Ekle
+        </Button>
+      </div>
+      <DataTable
+        columns={kidColumns}
+        data={kids}
+        hiddenColumns={["parentName"]}
+      />
+    </div>
+  );
+}
+
+function SessionsCard({ sessions }: { sessions: Session[] }) {
+  return (
+    <div>
+      <h2 className="text-xl font-bold mb-4">Giriş Çıkışlar</h2>
+      <DataTable columns={sessionColumns} data={sessions} />
+    </div>
   );
 }
 

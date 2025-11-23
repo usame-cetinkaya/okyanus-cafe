@@ -35,6 +35,7 @@ export const columns: ColumnDef<Kid>[] = [
     ),
   },
   {
+    id: "parentName",
     accessorKey: "expand.parent.name",
     header: "Veli",
     cell: ({ row, getValue }) => (
